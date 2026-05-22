@@ -109,7 +109,7 @@ jobs:
           fi
           echo "Godot binary: $GODOT_BIN"
           chmod +x "$GODOT_BIN"
-          GODOT_BIN=$(realpath "$GODOT_BIN")
+          echo "GODOT_BIN=$(realpath "$GODOT_BIN")" >> $GITHUB_ENV
 
       - name: Download export templates
         run: |
@@ -125,7 +125,7 @@ jobs:
 
       - name: Export
         run: |
-          "$GODOT_BIN" --headless --export-release "macOS" "build/macos/Sigma Date.app"
+          $GODOT_BIN --headless --export-release "macOS" "build/macos/Sigma Date.app"
 
       - name: Create DMG
         run: |
@@ -180,7 +180,8 @@ jobs:
 
       - name: Create debug keystore
         run: |
-          keytool -genkey -v -keystore "$HOME/debug.keystore" \
+          mkdir -p "$HOME/.android"
+          keytool -genkey -v -keystore "$HOME/.android/debug.keystore" \
             -alias androiddebugkey -storepass android -keypass android \
             -keyalg RSA -keysize 2048 -validity 10000 \
             -dname "CN=Unknown, OU=Unknown, O=Unknown, L=Unknown, ST=Unknown, C=Unknown" 2>/dev/null
