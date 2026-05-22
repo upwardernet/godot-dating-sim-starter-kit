@@ -190,7 +190,7 @@ jobs:
         run: mkdir -p build/android
 
       - name: Export
-        run: ./godot --headless --export-release "Android" "build/android/Sigma Date.apk"
+        run: ./godot --headless --export-debug "Android" "build/android/Sigma Date.apk"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
