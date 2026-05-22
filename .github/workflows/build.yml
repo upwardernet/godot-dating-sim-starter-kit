@@ -42,6 +42,20 @@ jobs:
       - name: Export
         shell: cmd
         run: godot.exe --headless --rendering-method gl_compatibility --export-release "Windows Desktop" build\windows\sigma-date.exe
+      - name: Embed PCK into .exe
+        run: |
+          $exe = "build\windows\sigma-date.exe"
+          $pck = "build\windows\sigma-date.pck"
+          if (Test-Path $pck) {
+            $exeBytes = [System.IO.File]::ReadAllBytes((Resolve-Path $exe))
+            $pckBytes = [System.IO.File]::ReadAllBytes((Resolve-Path $pck))
+            $combined = $exeBytes + $pckBytes
+            [System.IO.File]::WriteAllBytes((Resolve-Path $exe), $combined)
+            Remove-Item $pck
+            Write-Output "PCK embedded into $exe"
+          } else {
+            Write-Output "No .pck found, PCK may already be embedded"
+          }
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
