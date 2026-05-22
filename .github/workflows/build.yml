@@ -4,9 +4,171 @@ on:
   push:
     branches: [master]
     tags: ["v*"]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION_TAG: "4.6.2-stable"
+  GODOT_VERSION: "4.6.2.stable"
+  DISPLAY_NAME: "Sigma Date"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  export-windows:
+    name: Windows (.exe)
+    runs-on: windows-latest
+    timeout-minutes: 15
     steps:
-      - run: echo "OK"
+      - uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          $tag = "$env:GODOT_VERSION_TAG"
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$tag/Godot_v$($tag)_win64.exe.zip" -OutFile godot.zip
+          Expand-Archive -Path godot.zip -DestinationPath .
+          Move-Item "Godot_v$($tag)_win64.exe" godot.exe
+
+      - name: Download export templates
+        run: |
+          $tag = "$env:GODOT_VERSION_TAG"
+          $ver = "$env:GODOT_VERSION"
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$tag/Godot_v$($tag)_export_templates.tpz" -OutFile templates.tpz
+          $tpzDir = "$env:APPDATA\Godot\export_templates\$ver"
+          New-Item -ItemType Directory -Path $tpzDir -Force
+          Expand-Archive -Path templates.tpz -DestinationPath $tpzDir
+          Get-ChildItem -Path "$tpzDir\templates\*" | Move-Item -Destination $tpzDir -Force
+          Remove-Item "$tpzDir\templates" -Recurse -Force -ErrorAction SilentlyContinue
+
+      - name: Setup directories
+        run: New-Item -ItemType Directory -Path build\windows -Force
+
+      - name: Export
+        run: .\godot.exe --headless --export-release "Windows Desktop" "build/windows/$env:DISPLAY_NAME.exe"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows/Sigma Date.exe
+
+  export-linux:
+    name: Linux (x86_64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
+          mv "Godot_v${GODOT_VERSION_TAG}_linux.x86_64" godot
+          chmod +x godot
+
+      - name: Download export templates
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_export_templates.tpz"
+          TPZ_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          mkdir -p "$TPZ_DIR"
+          unzip -q "Godot_v${GODOT_VERSION_TAG}_export_templates.tpz" -d "$TPZ_DIR"
+          mv "$TPZ_DIR/templates/"* "$TPZ_DIR/"
+          rmdir "$TPZ_DIR/templates"
+
+      - name: Setup directories
+        run: mkdir -p build/linux
+
+      - name: Export
+        run: ./godot --headless --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
+
+      - name: Package
+        run: |
+          cd build/linux
+          tar -czf ../sigma-date-linux.tar.gz sigma-date.x86_64 sigma-date.pck
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/sigma-date-linux.tar.gz
+
+  export-android:
+    name: Android (.apk)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        run: |
+          ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          mkdir -p $ANDROID_SDK_ROOT
+          cd $ANDROID_SDK_ROOT
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip
+          rm commandlinetools-linux-11076708_latest.zip
+          yes | cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+
+      - name: Download Godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
+          mv "Godot_v${GODOT_VERSION_TAG}_linux.x86_64" godot
+          chmod +x godot
+
+      - name: Download export templates
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_export_templates.tpz"
+          TPZ_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          mkdir -p "$TPZ_DIR"
+          unzip -q "Godot_v${GODOT_VERSION_TAG}_export_templates.tpz" -d "$TPZ_DIR"
+          mv "$TPZ_DIR/templates/"* "$TPZ_DIR/"
+          rmdir "$TPZ_DIR/templates"
+
+      - name: Create debug keystore
+        run: |
+          mkdir -p "$HOME/.android"
+          keytool -genkey -v -keystore "$HOME/.android/debug.keystore" \
+            -alias androiddebugkey -storepass android -keypass android \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=Unknown, OU=Unknown, O=Unknown, L=Unknown, ST=Unknown, C=Unknown" 2>/dev/null
+
+      - name: Setup directories
+        run: mkdir -p build/android
+
+      - name: Export
+        run: ./godot --headless --export-debug "Android" "build/android/Sigma Date.apk"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: build/android/Sigma Date.apk
+
+  create-release:
+    name: Create Release
+    needs: [export-windows, export-linux, export-android]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Display structure
+        run: ls -R
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ env.DISPLAY_NAME }} ${{ github.ref_name }}"
+          files: |
+            windows/*.exe
+            linux/*.tar.gz
+            android/*.apk
+          draft: false
+          prerelease: false
+          generate_release_notes: true
