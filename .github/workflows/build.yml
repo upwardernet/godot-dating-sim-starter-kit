@@ -1,0 +1,192 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [master]
+    tags: ["v*"]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.6.2-stable"
+  PROJECT_NAME: "sigma-date"
+  DISPLAY_NAME: "Sigma Date"
+
+jobs:
+  export-windows:
+    name: Windows (.exe)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION/Godot_v$env:GODOT_VERSION_win64.exe.zip" -OutFile godot.zip
+          Expand-Archive -Path godot.zip -DestinationPath .
+          Move-Item "Godot_v$env:GODOT_VERSION_win64.exe" godot.exe
+
+      - name: Download export templates
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION/Godot_v$env:GODOT_VERSION_export_templates.tpz" -OutFile templates.tpz
+          New-Item -ItemType Directory -Path "$env:APPDATA\Godot\export_templates\$env:GODOT_VERSION" -Force
+          Expand-Archive -Path templates.tpz -DestinationPath "$env:APPDATA\Godot\export_templates\$env:GODOT_VERSION"
+
+      - name: Setup export directories
+        run: New-Item -ItemType Directory -Path build\windows -Force
+
+      - name: Export
+        run: .\godot.exe --headless --export-release "Windows Desktop" "build/windows/$env:DISPLAY_NAME.exe"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            build/windows/Sigma Date.exe
+            build/windows/Sigma Date.pck
+
+  export-linux:
+    name: Linux (x86_64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          mv "Godot_v${GODOT_VERSION}_linux.x86_64" godot
+          chmod +x godot
+
+      - name: Download export templates
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          unzip -q "Godot_v${GODOT_VERSION}_export_templates.tpz" -d "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+
+      - name: Setup export directories
+        run: mkdir -p build/linux
+
+      - name: Export
+        run: ./godot --headless --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
+
+      - name: Package
+        run: |
+          cd build/linux
+          tar -czf ../sigma-date-linux.tar.gz sigma-date.x86_64 sigma-date.pck
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/sigma-date-linux.tar.gz
+
+  export-macos:
+    name: macOS (.app + .dmg)
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_macos.universal.zip"
+          unzip -q "Godot_v${GODOT_VERSION}_macos.universal.zip"
+          mv "Godot.app" godot_binary.app
+          chmod +x godot_binary.app/Contents/MacOS/godot_macos
+
+      - name: Download export templates
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          mkdir -p "$HOME/Library/Application Support/Godot/export_templates/${GODOT_VERSION}"
+          unzip -q "Godot_v${GODOT_VERSION}_export_templates.tpz" -d "$HOME/Library/Application Support/Godot/export_templates/${GODOT_VERSION}"
+
+      - name: Setup export directories
+        run: mkdir -p build/macos
+
+      - name: Export
+        run: ./godot_binary.app/Contents/MacOS/godot_macos --headless --export-release "macOS" "build/macos/Sigma Date.app"
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname "Sigma Date" -srcfolder "build/macos/Sigma Date.app" -ov -format UDZO "build/macos/Sigma Date.dmg"
+
+      - name: Upload .dmg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: build/macos/Sigma Date.dmg
+
+  export-android:
+    name: Android (.apk)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "platforms;android-34 build-tools;34.0.0 cmdline-tools;latest"
+
+      - name: Download Godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          mv "Godot_v${GODOT_VERSION}_linux.x86_64" godot
+          chmod +x godot
+
+      - name: Download export templates
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          unzip -q "Godot_v${GODOT_VERSION}_export_templates.tpz" -d "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+
+      - name: Setup export directories
+        run: mkdir -p build/android
+
+      - name: Set Android SDK path
+        run: |
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+
+      - name: Export
+        run: ./godot --headless --export-release "Android" "build/android/Sigma Date.apk"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: build/android/Sigma Date.apk
+
+  create-release:
+    name: Create Release
+    needs: [export-windows, export-linux, export-macos, export-android]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Display structure
+        run: ls -R
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ env.DISPLAY_NAME }} ${{ github.ref_name }}"
+          files: |
+            windows/*.exe
+            windows/*.pck
+            linux/*.tar.gz
+            macos/*.dmg
+            android/*.apk
+          draft: false
+          prerelease: false
+          generate_release_notes: true

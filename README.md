@@ -1,5 +1,7 @@
 # Godot Dating Sim Starter Kit
 
+![Screenshot](screenshot.png)
+
 A complete, playable **2D visual novel / dating simulator** built in **Godot 4.6** — ready to fork, customize, and make your own. Drop in your own characters, backgrounds, story, and audio to create a unique dating sim in hours instead of weeks.
 
 ## Features
