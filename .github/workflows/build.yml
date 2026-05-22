@@ -28,6 +28,13 @@ jobs:
         run: |
           mkdir -p build/windows
           godot --headless --verbose --export-release "Windows Desktop" "build/windows/sigma-date.exe"
+      - name: Embed PCK
+        run: |
+          if [ -f build/windows/sigma-date.pck ]; then
+            cat build/windows/sigma-date.pck >> build/windows/sigma-date.exe
+            rm build/windows/sigma-date.pck
+            echo "PCK embedded"
+          fi
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -49,6 +56,13 @@ jobs:
         run: |
           mkdir -p build/linux
           godot --headless --verbose --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
+      - name: Embed PCK
+        run: |
+          if [ -f build/linux/sigma-date.pck ]; then
+            cat build/linux/sigma-date.pck >> build/linux/sigma-date.x86_64
+            rm build/linux/sigma-date.pck
+            echo "PCK embedded"
+          fi
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
