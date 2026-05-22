@@ -40,16 +40,13 @@ jobs:
       - name: Export
         shell: cmd
         run: godot.exe --headless --rendering-method gl_compatibility --export-release "Windows Desktop" build\windows\sigma-date.exe
-      - name: Embed PCK
-        shell: cmd
-        run: |
-          copy /b build\windows\sigma-date.exe + build\windows\sigma-date.pck build\windows\sigma-date.exe
-          del build\windows\sigma-date.pck
+      - name: Package
+        run: Compress-Archive -Path build\windows\sigma-date.exe, build\windows\sigma-date.pck -DestinationPath build\sigma-date-windows.zip
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows
-          path: build\windows\sigma-date.exe
+          path: build\sigma-date-windows.zip
 
   export-linux:
     name: Linux (x86_64)
@@ -66,15 +63,14 @@ jobs:
         run: |
           mkdir -p build/linux
           godot --headless --verbose --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
-      - name: Embed PCK
+      - name: Package
         run: |
-          cat build/linux/sigma-date.pck >> build/linux/sigma-date.x86_64
-          rm build/linux/sigma-date.pck
+          tar -czf build/sigma-date-linux.tar.gz -C build/linux sigma-date.x86_64 sigma-date.pck
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux
-          path: build/linux/sigma-date.x86_64
+          path: build/sigma-date-linux.tar.gz
 
   export-android:
     name: Android (.apk)
@@ -147,14 +143,14 @@ jobs:
             **Sigma Date** is a complete, playable 2D visual novel / dating simulator built in Godot 4.6 — ready to fork, customize, and make your own.
 
             ### Included in this release:
-            - **sigma-date.exe** — Windows
-            - **sigma-date.x86_64** — Linux
+            - **sigma-date-windows.zip** — Windows (.exe + .pck)
+            - **sigma-date-linux.tar.gz** — Linux (x86_64 + .pck)
             - **Sigma Date.apk** — Android
 
-            Drop in your own characters, backgrounds, story, and audio to create a unique dating sim.
+            Extract the zip/tar.gz and run the executable alongside the .pck file.
           files: |
-            windows/sigma-date.exe
-            linux/sigma-date.x86_64
+            windows/*.zip
+            linux/*.tar.gz
             android/Sigma Date.apk
           draft: false
           prerelease: false
