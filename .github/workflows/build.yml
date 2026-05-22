@@ -103,9 +103,9 @@ jobs:
           ls -la
           GODOT_BIN=$(find . -name "godot*" -type f -perm +111 2>/dev/null | head -1)
           if [ -z "$GODOT_BIN" ] && [ -d "Godot.app" ]; then
-            GODOT_BIN="Godot.app/Contents/MacOS/godot_macos"
+            GODOT_BIN="Godot.app/Contents/MacOS/Godot"
           elif [ -z "$GODOT_BIN" ] && [ -d "Godot_mono.app" ]; then
-            GODOT_BIN="Godot_mono.app/Contents/MacOS/godot_macos"
+            GODOT_BIN="Godot_mono.app/Contents/MacOS/Godot"
           fi
           echo "Godot binary: $GODOT_BIN"
           chmod +x "$GODOT_BIN"
