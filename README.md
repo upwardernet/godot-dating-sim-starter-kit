@@ -97,14 +97,14 @@ The gallery is data-driven from `characters.gd` — adding entries there creates
 
 ## CI/CD & Releases
 
-Every push to `master` builds **Windows (.exe)**, **Linux (x86_64)**, and **Android (.apk)** via GitHub Actions. Push a `v*` tag (e.g. `v1.0.0`) to create a GitHub Release with all artifacts. macOS support is planned.
+Every push to `master` builds **Windows (.exe)**, **Linux (x86_64)**, and **Android (.apk)** via GitHub Actions. Push a `v*` tag (e.g. `v1.0.0`) to create a GitHub Release with all artifacts.
 
 To download the latest build, visit the [Releases](https://github.com/upwardernet/godot-dating-sim-starter-kit/releases) page.
 
 ## Requirements
 
 - **Godot 4.6** (GL Compatibility renderer)
-- **Windows** (D3D12), **Linux**, **macOS**, **Android**
+- **Windows** (D3D12), **Linux**, **Android**
 
 ## License
 

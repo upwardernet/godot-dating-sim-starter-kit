@@ -11,7 +11,6 @@ config_version=5
 [application]
 
 config/name="sigmadate"
-config/macos_bundle_identifier="com.sigmadate.game"
 run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"

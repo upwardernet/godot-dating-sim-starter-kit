@@ -78,23 +78,6 @@ jobs:
           name: linux
           path: build/linux/sigma-date.x86_64
 
-  # NOTE: macOS export disabled due to bundle identifier validation issue in Godot 4.6.3.
-  # The godot-ci Docker cross-compile works but the export preset requires
-  # a valid application/bundle_identifier that Godot can't read from the config.
-  # export-macos-app:
-  #   name: macOS Export (cross-compile)
-  #   runs-on: ubuntu-24.04
-  #   container:
-  #     image: barichello/godot-ci:4.6.3
-  #   steps:
-  #     ...
-  # export-macos-dmg:
-  #   name: macOS (.dmg)
-  #   needs: export-macos-app
-  #   runs-on: macos-latest
-  #   steps:
-  #     ...
-
   export-android:
     name: Android (.apk)
     runs-on: ubuntu-latest
@@ -169,7 +152,6 @@ jobs:
             - **sigma-date.exe** — Windows
             - **sigma-date.x86_64** — Linux
             - **Sigma Date.apk** — Android
-            - macOS .dmg is coming soon (requires bundle identifier fix)
 
             Drop in your own characters, backgrounds, story, and audio to create a unique dating sim.
           files: |
