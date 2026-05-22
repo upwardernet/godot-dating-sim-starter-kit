@@ -43,10 +43,8 @@ jobs:
       - name: Embed PCK
         shell: cmd
         run: |
-          if exist build\windows\sigma-date.pck (
-            copy /b build\windows\sigma-date.exe + build\windows\sigma-date.pck build\windows\sigma-date.exe
-            del build\windows\sigma-date.pck
-          )
+          copy /b build\windows\sigma-date.exe + build\windows\sigma-date.pck build\windows\sigma-date.exe
+          del build\windows\sigma-date.pck
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -70,10 +68,8 @@ jobs:
           godot --headless --verbose --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
       - name: Embed PCK
         run: |
-          if [ -f build/linux/sigma-date.pck ]; then
-            cat build/linux/sigma-date.pck >> build/linux/sigma-date.x86_64
-            rm build/linux/sigma-date.pck
-          fi
+          cat build/linux/sigma-date.pck >> build/linux/sigma-date.x86_64
+          rm build/linux/sigma-date.pck
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
