@@ -113,20 +113,20 @@ A university exchange student arrives from abroad for a semester abroad. They're
 ## Characters
 
 ### Elena (Stepmom)
-- **Appearance:** Auburn hair, soft brown eyes, fair skin, curvy milf with full figure
+- **Appearance:** Auburn hair, soft brown eyes, fair skin
 - **Personality:** Shy/bashful, warm caregiver, easily embarrassed
 - **Accent color:** Red `Color(0.8, 0.3, 0.2)`
 - **Expressions:** neutral, happy, flirt, surprised, annoyed
 
 ### Maya (Stepsis)
-- **Appearance:** Long blonde hair, blue eyes, fair skin, slim but curvy, athletic figure
+- **Appearance:** Long blonde hair, blue eyes, fair skin
 - **Personality:** Bold, initiator, bratty tease, playful
 - **Accent color:** Gold `Color(0.9, 0.7, 0.2)`
 - **Expressions:** neutral, happy, flirt, surprised, annoyed
 
 ### Vanessa (Aunt)
-- **Appearance:** Long dark black hair, green eyes, fair skin, athletic and toned milf with full figure
-- **Personality:** Direct, sophisticated, confident, predatory
+- **Appearance:** Long dark black hair, green eyes, fair skin
+- **Personality:** Direct, sophisticated, confident
 - **Accent color:** Purple `Color(0.4, 0.3, 0.8)`
 - **Expressions:** neutral, happy, flirt, surprised, annoyed
 
@@ -142,20 +142,14 @@ A university exchange student arrives from abroad for a semester abroad. They're
 
 **Solution:** Use `easy fullkSampler` + `easy pipeIn` nodes instead. These are from the `comfyui-easy-use` custom node pack and work reliably on Windows.
 
-### Single Model Strategy: Z-Image-Turbo NSFW Only
+### Model Strategy
 
-Use only `zImageTurboNSFW_71BF16.safetensors` for ALL image generation. Control clothing level via positive prompt keywords:
-
-| Content Level | Required Prompt Keyword | Example Use |
-|---------------|------------------------|-------------|
-| **SFW** | `must have clothes` | Portraits, body poses, backgrounds |
-| **Semi-NSFW** | `semi nude` | Lingerie, suggestive clothing |
-| **Full-NSFW** | `fully nude` | Explicit DLC content |
+Use a general-purpose image generation model for all assets.
 
 ### Working Workflows (saved to `workflows/ai/`)
 
-#### 1. Character Image (`character_z_image_turbo_nsfw.json`)
-- **Model:** `zImageTurboNSFW_71BF16.safetensors` (UNETLoader)
+#### 1. Character Image
+- **Model:** General-purpose image generation model
 - **CLIP:** `qwen_3_4b.safetensors` (type: lumina2)
 - **VAE:** `ae.safetensors`
 - **Settings:** 8 steps, CFG=1, sampler=res_multistep, scheduler=simple
@@ -165,20 +159,10 @@ Use only `zImageTurboNSFW_71BF16.safetensors` for ALL image generation. Control 
 
 **SFW Portrait Example Prompt:**
 ```
-A beautiful sexy European Caucasian woman with auburn hair, soft brown eyes, fair skin, wearing a fitted white blouse. She is a curvy milf with full figure. must have clothes. Realistic photographic portrait, professional photography, natural lighting, high quality, photorealistic, no anime.
+A portrait of a woman with auburn hair, soft brown eyes, fair skin, wearing a fitted white blouse. Realistic photographic portrait, professional photography, natural lighting, high quality, photorealistic.
 ```
 
-**Semi-NSFW Example Prompt:**
-```
-A beautiful sexy European Caucasian milf woman with auburn hair, soft brown eyes, fair skin, wearing black lace lingerie. She is curvy with full figure, sitting on a bed, seductive pose. semi nude. Realistic photographic portrait, professional photography, natural lighting, high quality, photorealistic, no anime, nsfw.
-```
-
-**Full-NSFW Example Prompt:**
-```
-A beautiful sexy European Caucasian milf woman with auburn hair, soft brown eyes, fair skin. She is curvy with full figure, standing in a bedroom, seductive pose. fully nude. Realistic photographic portrait, professional photography, natural lighting, high quality, photorealistic, no anime, nsfw.
-```
-
-#### 2. Background Removal (`remove_background_easy_rembg.json`)
+### Asset Generation Checklist Per Character
 - **Node:** `easy imageRemBg`
 - **Model:** `RMBG-1.4` (RMBG-2.0 is gated/requires HuggingFace auth)
 - **Settings:** `add_background=none`, `refine_foreground=false`, `rem_mode=RMBG-1.4`
@@ -237,7 +221,7 @@ Lyrics: [Instrumental]\nSmooth scene transition swoosh\nGentle whoosh sound\nSof
 BPM: 90 | Keyscale: D minor | Duration: 2s
 ```
 
-### Workflow Node Pattern (Z-Image-Turbo NSFW)
+### Workflow Node Pattern
 ```
 UNETLoader → ModelSamplingAuraFlow(shift=3) → easy pipeIn → easy fullkSampler
 CLIPLoader(type=lumina2) → CLIPTextEncode (pos + neg)
@@ -284,8 +268,7 @@ VAELoader ↗
 2. **4 expression variants** (512x512): happy, flirt, surprised, annoyed — img2img from base, denoise 0.5
 3. **2 body poses** (512x768): standing, sitting/casual — text-to-image or img2img
 4. **Remove backgrounds** from all body poses using `remove_background_easy_rembg.json`
-5. **3 NSFW images** (512x512): semi-NSFW and full-NSFW variants
-6. Use **different seeds** per variation (e.g., 42 for base, 101-104 for expressions, 401-402 for bodies, 501-503 for NSFW)
+5. Use **different seeds** per variation (e.g., 42 for base, 101-104 for expressions, 401-402 for bodies)
 
 ### Copy Assets to Game
 ```powershell
@@ -330,7 +313,7 @@ Copy-Item "C:\Users\D\Documents\ComfyUI\output\audio\sfx_{name}_00001_.mp3" "C:\
 
 ### Qwen Image Edit dimension mismatch
 - **Error:** `expected normalized_shape=[3584], got input of size[1, 90, 2560]`
-- **Fix:** Don't use Qwen Image Edit — use Z-Image-Turbo NSFW model for all generation with prompt keywords to control clothing level
+- **Fix:** Use a general-purpose image generation model for all assets with prompt keywords to control clothing level.
 
 ### easy fullkSampler with audio latents
 - **Error:** `tuple index out of range` on audio latent shape

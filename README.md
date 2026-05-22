@@ -82,7 +82,7 @@ scripts/         — All .gd scripts
 data/            — story.json + script.gd (Story autoload)
 tests/           — Automated test suite (run with test_runner.tscn)
 assets/
-  characters/    — {name}/portrait PNGs + body poses + tier images
+  characters/    — {name}/portrait PNGs + body poses
   backgrounds/   — bg_*.png scene backgrounds
   audio/         — bgm/ and sfx/ MP3s
 ```
@@ -95,10 +95,16 @@ assets/
 
 The gallery is data-driven from `characters.gd` — adding entries there creates new tabs and slots automatically.
 
+## CI/CD & Releases
+
+Every push to `master` builds **Windows (.exe)**, **Linux (tar.gz)**, and **Android (.apk)** via GitHub Actions. Push a `v*` tag (e.g. `v1.0.0`) to create a GitHub Release with all artifacts.
+
+To download the latest build, visit the [Releases](https://github.com/upwardernet/godot-dating-sim-starter-kit/releases) page.
+
 ## Requirements
 
 - **Godot 4.6** (GL Compatibility renderer)
-- **Windows** (D3D12) — Android export planned
+- **Windows** (D3D12), **Linux**, **macOS**, **Android**
 
 ## License
 

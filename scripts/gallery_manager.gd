@@ -1,6 +1,6 @@
 extends Node
 
-# GalleryManager — tracks which character portraits, tier images, and backgrounds have been seen.
+# GalleryManager — tracks which character portraits, body poses, and backgrounds have been seen.
 # Persists across save slots to user://gallery.json (meta-progression, not per-save).
 
 const GALLERY_PATH = "user://gallery.json"

@@ -151,6 +151,15 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: "${{ env.DISPLAY_NAME }} ${{ github.ref_name }}"
+          body: |
+            **Sigma Date** is a complete, playable 2D visual novel / dating simulator built in Godot 4.6 — ready to fork, customize, and make your own.
+
+            ### Included in this release:
+            - **sigma-date.exe** — Windows (GL Compatibility, D3D12)
+            - **sigma-date-linux.tar.gz** — Linux (x86_64)
+            - **Sigma Date.apk** — Android
+
+            Drop in your own characters, backgrounds, story, and audio to create a unique dating sim.
           files: |
             windows/*.exe
             linux/*.tar.gz
