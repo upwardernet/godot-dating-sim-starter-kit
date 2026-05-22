@@ -20,14 +20,16 @@ jobs:
 
       - name: Download Godot
         run: |
-          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION/Godot_v$env:GODOT_VERSION_win64.exe.zip" -OutFile godot.zip
+          $v = "$env:GODOT_VERSION"
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$v/Godot_v$($v)_win64.exe.zip" -OutFile godot.zip
           Expand-Archive -Path godot.zip -DestinationPath .
-          Move-Item "Godot_v$env:GODOT_VERSION_win64.exe" godot.exe
+          Move-Item "Godot_v$($v)_win64.exe" godot.exe
 
       - name: Download export templates
         run: |
-          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$env:GODOT_VERSION/Godot_v$env:GODOT_VERSION_export_templates.tpz" -OutFile templates.tpz
-          $tpzDir = "$env:APPDATA\Godot\export_templates\$env:GODOT_VERSION"
+          $v = "$env:GODOT_VERSION"
+          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$v/Godot_v$($v)_export_templates.tpz" -OutFile templates.tpz
+          $tpzDir = "$env:APPDATA\Godot\export_templates\$v"
           New-Item -ItemType Directory -Path $tpzDir -Force
           Expand-Archive -Path templates.tpz -DestinationPath $tpzDir
           # .tpz contains a templates/ subdirectory — move contents up
