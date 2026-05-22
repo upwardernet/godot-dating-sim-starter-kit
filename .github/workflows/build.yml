@@ -10,82 +10,45 @@ permissions:
   contents: write
 
 env:
-  GODOT_VERSION_TAG: "4.6.2-stable"
-  GODOT_VERSION: "4.6.2.stable"
   DISPLAY_NAME: "Sigma Date"
 
 jobs:
   export-windows:
     name: Windows (.exe)
-    runs-on: windows-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.6.3
     steps:
       - uses: actions/checkout@v4
-      - name: Download Godot
+      - name: Setup templates
         run: |
-          $tag = "$env:GODOT_VERSION_TAG"
-          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$tag/Godot_v$($tag)_win64.exe.zip" -OutFile godot.zip
-          Expand-Archive -Path godot.zip -DestinationPath .
-          Move-Item "Godot_v$($tag)_win64.exe" godot.exe
-      - name: Download export templates
+          mkdir -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/4.6.3.stable ~/.local/share/godot/export_templates/4.6.3.stable
+      - name: Build
         run: |
-          $tag = "$env:GODOT_VERSION_TAG"
-          $ver = "$env:GODOT_VERSION"
-          Invoke-WebRequest -Uri "https://github.com/godotengine/godot/releases/download/$tag/Godot_v$($tag)_export_templates.tpz" -OutFile templates.tpz
-          $tpzDir = "$env:APPDATA\Godot\export_templates\$ver"
-          New-Item -ItemType Directory -Path $tpzDir -Force
-          Expand-Archive -Path templates.tpz -DestinationPath $tpzDir
-          Get-ChildItem -Path "$tpzDir\templates\*" | Move-Item -Destination $tpzDir -Force
-          Remove-Item "$tpzDir\templates" -Recurse -Force -ErrorAction SilentlyContinue
-      - name: Setup directories
-        run: New-Item -ItemType Directory -Path build\windows -Force
-      - name: Export
-        shell: cmd
-        run: godot.exe --headless --rendering-method gl_compatibility --export-release "Windows Desktop" build\windows\sigma-date.exe
-      - name: Embed PCK into .exe
-        run: |
-          $exe = "build\windows\sigma-date.exe"
-          $pck = "build\windows\sigma-date.pck"
-          if (Test-Path $pck) {
-            $exeBytes = [System.IO.File]::ReadAllBytes((Resolve-Path $exe))
-            $pckBytes = [System.IO.File]::ReadAllBytes((Resolve-Path $pck))
-            $combined = $exeBytes + $pckBytes
-            [System.IO.File]::WriteAllBytes((Resolve-Path $exe), $combined)
-            Remove-Item $pck
-            Write-Output "PCK embedded into $exe"
-          } else {
-            Write-Output "No .pck found, PCK may already be embedded"
-          }
+          mkdir -p build/windows
+          godot --headless --verbose --export-release "Windows Desktop" "build/windows/sigma-date.exe"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows
-          path: build\windows\sigma-date.exe
+          path: build/windows/sigma-date.exe
 
   export-linux:
     name: Linux (x86_64)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.6.3
     steps:
       - uses: actions/checkout@v4
-      - name: Download Godot
+      - name: Setup templates
         run: |
-          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
-          unzip -q "Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
-          mv "Godot_v${GODOT_VERSION_TAG}_linux.x86_64" godot
-          chmod +x godot
-      - name: Download export templates
+          mkdir -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/4.6.3.stable ~/.local/share/godot/export_templates/4.6.3.stable
+      - name: Build
         run: |
-          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_export_templates.tpz"
-          TPZ_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
-          mkdir -p "$TPZ_DIR"
-          unzip -q "Godot_v${GODOT_VERSION_TAG}_export_templates.tpz" -d "$TPZ_DIR"
-          mv "$TPZ_DIR/templates/"* "$TPZ_DIR/"
-          rmdir "$TPZ_DIR/templates"
-      - name: Setup directories
-        run: mkdir -p build/linux
-      - name: Export
-        run: ./godot --headless --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
+          mkdir -p build/linux
+          godot --headless --verbose --export-release "Linux/X11" "build/linux/sigma-date.x86_64"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -116,16 +79,16 @@ jobs:
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
       - name: Download Godot
         run: |
-          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
-          unzip -q "Godot_v${GODOT_VERSION_TAG}_linux.x86_64.zip"
-          mv "Godot_v${GODOT_VERSION_TAG}_linux.x86_64" godot
+          wget -q "https://github.com/godotengine/godot/releases/download/4.6.2-stable/Godot_v4.6.2-stable_linux.x86_64.zip"
+          unzip -q "Godot_v4.6.2-stable_linux.x86_64.zip"
+          mv "Godot_v4.6.2-stable_linux.x86_64" godot
           chmod +x godot
       - name: Download export templates
         run: |
-          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_export_templates.tpz"
-          TPZ_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          wget -q "https://github.com/godotengine/godot/releases/download/4.6.2-stable/Godot_v4.6.2-stable_export_templates.tpz"
+          TPZ_DIR="$HOME/.local/share/godot/export_templates/4.6.2.stable"
           mkdir -p "$TPZ_DIR"
-          unzip -q "Godot_v${GODOT_VERSION_TAG}_export_templates.tpz" -d "$TPZ_DIR"
+          unzip -q "Godot_v4.6.2-stable_export_templates.tpz" -d "$TPZ_DIR"
           mv "$TPZ_DIR/templates/"* "$TPZ_DIR/"
           rmdir "$TPZ_DIR/templates"
       - name: Create debug keystore
