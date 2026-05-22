@@ -82,7 +82,7 @@ jobs:
     name: macOS Export (cross-compile)
     runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:4.6.3-stable
+      image: barichello/godot-ci:4.6.3
     steps:
       - uses: actions/checkout@v4
       - name: Setup
