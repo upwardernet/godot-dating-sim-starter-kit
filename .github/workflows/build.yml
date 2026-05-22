@@ -92,12 +92,12 @@ jobs:
       - name: Build
         run: |
           mkdir -p build/macos
-          godot --headless --verbose --export-release "macOS" "build/macos/Sigma Date.app"
+          godot --headless --verbose --export-release "macOS" "build/macos/Sigma Date.zip"
       - name: Upload .app
         uses: actions/upload-artifact@v4
         with:
-          name: macos-app
-          path: build/macos
+          name: macos-zip
+          path: build/macos/Sigma Date.zip
 
   export-macos-dmg:
     name: macOS (.dmg)
@@ -107,11 +107,12 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: macos-app
+          name: macos-zip
           path: build/macos
       - name: Create DMG
         run: |
-          hdiutil create -volname "Sigma Date" -srcfolder "build/macos/Sigma Date.app" -ov -format UDZO "build/macos/Sigma Date.dmg"
+          unzip -q "build/macos/Sigma Date.zip" -d build/macos/app
+          hdiutil create -volname "Sigma Date" -srcfolder build/macos/app -ov -format UDZO "build/macos/Sigma Date.dmg"
       - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
