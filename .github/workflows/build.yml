@@ -40,7 +40,8 @@ jobs:
       - name: Setup directories
         run: New-Item -ItemType Directory -Path build\windows -Force
       - name: Export
-        run: .\godot.exe --no-window --verbose --export-release "Windows Desktop" "build\windows\sigma-date.exe"
+        shell: cmd
+        run: godot.exe --headless --rendering-method gl_compatibility --export-release "Windows Desktop" "build\windows\sigma-date.exe"
       - name: Debug listing
         run: Get-ChildItem -Recurse build\
       - name: Upload artifact
