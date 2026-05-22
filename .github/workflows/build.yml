@@ -100,9 +100,16 @@ jobs:
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION_TAG}/Godot_v${GODOT_VERSION_TAG}_macos.universal.zip"
           unzip -q "Godot_v${GODOT_VERSION_TAG}_macos.universal.zip"
-          GODOT_APP=$(echo Godot*.app | awk '{print $1}')
-          mv "$GODOT_APP" godot_binary.app
-          chmod +x godot_binary.app/Contents/MacOS/godot_macos
+          ls -la
+          GODOT_BIN=$(find . -name "godot*" -type f -perm +111 2>/dev/null | head -1)
+          if [ -z "$GODOT_BIN" ] && [ -d "Godot.app" ]; then
+            GODOT_BIN="Godot.app/Contents/MacOS/godot_macos"
+          elif [ -z "$GODOT_BIN" ] && [ -d "Godot_mono.app" ]; then
+            GODOT_BIN="Godot_mono.app/Contents/MacOS/godot_macos"
+          fi
+          echo "Godot binary: $GODOT_BIN"
+          chmod +x "$GODOT_BIN"
+          GODOT_BIN=$(realpath "$GODOT_BIN")
 
       - name: Download export templates
         run: |
@@ -117,7 +124,8 @@ jobs:
         run: mkdir -p build/macos
 
       - name: Export
-        run: ./godot_binary.app/Contents/MacOS/godot_macos --headless --export-release "macOS" "build/macos/Sigma Date.app"
+        run: |
+          "$GODOT_BIN" --headless --export-release "macOS" "build/macos/Sigma Date.app"
 
       - name: Create DMG
         run: |
