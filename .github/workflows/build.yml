@@ -46,9 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows
-          path: |
-            build\windows\sigma-date.exe
-            build\windows\sigma-date.pck
+          path: build\windows\sigma-date.exe
 
   export-linux:
     name: Linux (x86_64)
@@ -157,8 +155,7 @@ jobs:
 
             Drop in your own characters, backgrounds, story, and audio to create a unique dating sim.
           files: |
-            windows/*.exe
-            windows/*.pck
+            windows/sigma-date.exe
             linux/sigma-date.x86_64
             android/Sigma Date.apk
           draft: false
