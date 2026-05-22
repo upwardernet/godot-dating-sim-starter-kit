@@ -41,7 +41,7 @@ jobs:
         run: New-Item -ItemType Directory -Path build\windows -Force
       - name: Export
         shell: cmd
-        run: godot.exe --headless --rendering-method gl_compatibility --export-release "Windows Desktop" "build\windows\sigma-date.exe"
+        run: godot.exe --headless --rendering-method gl_compatibility --export-release "Windows Desktop" build\windows\sigma-date.exe
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
