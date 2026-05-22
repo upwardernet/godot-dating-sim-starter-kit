@@ -1,0 +1,131 @@
+{
+  "last_node_id": 30,
+  "last_link_id": 30,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Qwen3TTSLoader",
+      "pos": [-1600, 0],
+      "size": [400, 200],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "model_obj", "type": "QWEN3_MODEL", "links": [1]}],
+      "properties": {"Node name for S&R": "Qwen3TTSLoader"},
+      "widgets_values": ["Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice", "ModelScope", "bf16", "sdpa", true]
+    },
+    {
+      "id": 2,
+      "type": "LoadAudio",
+      "pos": [-1600, 250],
+      "size": [350, 100],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "audio", "type": "AUDIO", "links": [2]}],
+      "properties": {"Node name for S&R": "LoadAudio"},
+      "widgets_values": ["tts_maya_voice_design_00001_.mp3", "audio/tts"]
+    },
+    {
+      "id": 3,
+      "type": "Qwen3TTSVoiceClonePrompt",
+      "pos": [-1100, 250],
+      "size": [400, 150],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "model_obj", "type": "QWEN3_MODEL", "link": 1},
+        {"name": "ref_audio", "type": "AUDIO", "link": 2}
+      ],
+      "outputs": [{"name": "voice_clone_prompt", "type": "QWEN3_PROMPT", "links": [3]}],
+      "properties": {"Node name for S&R": "Qwen3TTSVoiceClonePrompt"},
+      "widgets_values": ["tts_maya_voice_design_00001_.mp3", false, "Oh my god, he's actually here! The exchange student from overseas!"]
+    },
+    {
+      "id": 4,
+      "type": "Qwen3TTSRoleBank",
+      "pos": [-600, 250],
+      "size": [400, 200],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "role_bank", "type": "QWEN3_ROLE_BANK", "links": [4]}],
+      "properties": {"Node name for S&R": "Qwen3TTSRoleBank"},
+      "widgets_values": ["maya", ["3", 0], "", null, "", null]
+    },
+    {
+      "id": 5,
+      "type": "Qwen3TTSScriptProcessor",
+      "pos": [-1100, 500],
+      "size": [500, 300],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "texts", "type": "LIST", "links": [5]},
+        {"name": "instructs", "type": "LIST", "links": [6]},
+        {"name": "roles", "type": "LIST", "links": [7]},
+        {"name": "pauses", "type": "LIST", "links": [8]}
+      ],
+      "properties": {"Node name for S&R": "Qwen3TTSScriptProcessor"},
+      "widgets_values": [
+        "maya: Oh my god, he's actually here! The exchange student from overseas!\n[pause:0.5]\nmaya: Mom said he's studying at the university for a whole semester. That's like... three months of living under our roof~\n[pause:0.5]\nmaya: Oh, we'll make an impression alright. I've already planned his entire welcome tour~\n[pause:0.5]\nmaya: Relax, Mom! I'm just being hospitable. Besides, look at his photo — he's totally cute!\n[pause:0.5]\nmaya: And I'm Maya! Well, technically your host sister, but you can call me whatever you want~\n[pause:0.5]\nmaya: What? I am being proper! I'm just excited we finally have someone interesting in this house.\n[pause:0.5]\nmaya: Oh, I KNEW you'd pick me! This is going to be the best semester ever.\n[pause:0.5]\nmaya: Settle in later! Right now I need to show him the BEST spots in town. The university is boring — the real education happens outside campus~\n[pause:0.5]\nmaya: Orientation is just boring paperwork. I'll give him the REAL introduction to this city.\n[pause:0.5]\nmaya: Don't worry, I'll even let you pick the music in my car. That's how generous I am.\n[pause:0.5]\nmaya: Booooring. Come on, let's do something fun!\n[pause:0.5]\nmaya: Aunt Vanessa! When did you get here?!",
+        "A bratty, energetic young adult female voice. Pitch is medium-high with playful sassiness. Bold, teasing, slightly flirtatious."
+      ]
+    },
+    {
+      "id": 6,
+      "type": "Qwen3TTSAdvancedDialogue",
+      "pos": [-500, 500],
+      "size": [500, 400],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "model_obj", "type": "QWEN3_MODEL", "link": 1},
+        {"name": "texts", "type": "LIST", "link": 5},
+        {"name": "instructs", "type": "LIST", "link": 6},
+        {"name": "roles", "type": "LIST", "link": 7},
+        {"name": "pauses", "type": "LIST", "link": 8},
+        {"name": "role_bank", "type": "QWEN3_ROLE_BANK", "link": 4}
+      ],
+      "outputs": [{"name": "AUDIO", "type": "AUDIO", "links": [9]}],
+      "properties": {"Node name for S&R": "Qwen3TTSAdvancedDialogue"},
+      "widgets_values": [42, 2048, 0.9, 1, 50, 1.05, 0.9, 1, 50]
+    },
+    {
+      "id": 7,
+      "type": "SaveAudioMP3",
+      "pos": [100, 500],
+      "size": [300, 150],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [{"name": "audio", "type": "AUDIO", "link": 9}],
+      "outputs": [],
+      "properties": {"Node name for S&R": "SaveAudioMP3"},
+      "widgets_values": ["audio/tts/tts_maya_batch", "V0"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 0, "QWEN3_MODEL"],
+    [1, 1, 0, 6, 0, "QWEN3_MODEL"],
+    [2, 2, 0, 3, 1, "AUDIO"],
+    [3, 3, 0, 4, 1, "QWEN3_PROMPT"],
+    [4, 4, 0, 6, 5, "QWEN3_ROLE_BANK"],
+    [5, 5, 0, 6, 1, "LIST"],
+    [6, 5, 1, 6, 2, "LIST"],
+    [7, 5, 2, 6, 3, "LIST"],
+    [8, 5, 3, 6, 4, "LIST"],
+    [9, 6, 0, 7, 0, "AUDIO"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {"ds": {"scale": 1, "offset": [1600, 0]}},
+  "version": 0.4
+}

@@ -1,0 +1,60 @@
+{
+  "1": {
+    "class_type": "Qwen3TTSLoader",
+    "inputs": {
+      "attn_mode": "sdpa",
+      "auto_download": true,
+      "download_source": "ModelScope",
+      "model_repo": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+      "precision": "bf16"
+    }
+  },
+  "10": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio_path": "tts_maya_voice_design_00001_.mp3",
+      "directory": "audio/tts"
+    }
+  },
+  "11": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio_path": "tts_elena_voice_design_00001_.mp3",
+      "directory": "audio/tts"
+    }
+  },
+  "12": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio_path": "tts_vanessa_voice_design_00001_.mp3",
+      "directory": "audio/tts"
+    }
+  },
+  "20": {
+    "class_type": "Qwen3TTSVoiceClone",
+    "inputs": {
+      "enable_x_vector_instant": false,
+      "instruct": "A bratty, energetic young adult female voice. Pitch is medium-high with playful sassiness. Bold, teasing, slightly flirtatious.",
+      "max_new_tokens": 2048,
+      "model_obj": ["1", 0],
+      "output_mode": "Concatenate (Merge)",
+      "ref_audio": ["10", 0],
+      "ref_text": "Oh my god, he's actually here! The exchange student from overseas!",
+      "repetition_penalty": 1.05,
+      "seed": 42,
+      "target_language": "English",
+      "target_text": "Oh my god, he's actually here! The exchange student from overseas!",
+      "temperature": 0.9,
+      "top_k": 50,
+      "top_p": 1
+    }
+  },
+  "30": {
+    "class_type": "SaveAudioMP3",
+    "inputs": {
+      "audio": ["20", 0],
+      "filename_prefix": "audio/tts/tts_maya_0",
+      "quality": "V0"
+    }
+  }
+}

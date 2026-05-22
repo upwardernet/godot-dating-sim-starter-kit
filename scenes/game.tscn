@@ -1,0 +1,235 @@
+[gd_scene format=3 uid="uid://bgame1"]
+
+[ext_resource type="Script" uid="uid://3btwo3rbh8a6" path="res://scripts/game.gd" id="1_gm"]
+[ext_resource type="PackedScene" uid="uid://dlgbox1" path="res://scenes/dialogue_box.tscn" id="2_db"]
+[ext_resource type="PackedScene" path="res://scenes/save_load_menu.tscn" id="3_slm"]
+
+[node name="Game" type="Control" unique_id=930963146]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gm")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1749638660]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+stretch_mode = 6
+
+[node name="DarkOverlay" type="ColorRect" parent="." unique_id=1100333566]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.35)
+
+[node name="CharacterContainer" type="HBoxContainer" parent="." unique_id=2046406508]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+alignment = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=945735774]
+
+[node name="DialogueBox" parent="CanvasLayer" unique_id=1164463054 instance=ExtResource("2_db")]
+
+[node name="SettingsOverlay" type="Control" parent="CanvasLayer" unique_id=979533207]
+visible = false
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="BgOverlay" type="ColorRect" parent="CanvasLayer/SettingsOverlay" unique_id=1678954527]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="SettingsPanel" type="Panel" parent="CanvasLayer/SettingsOverlay" unique_id=1600058310]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -180.0
+offset_right = 200.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/SettingsOverlay/SettingsPanel" unique_id=2039629173]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 360.0
+offset_bottom = 220.0
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1371636852]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.7, 0.95, 1)
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="BGMContainer" type="VBoxContainer" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=474262810]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BGMLabel" type="Label" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer/BGMContainer" unique_id=1030988309]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Music Volume"
+
+[node name="BGMSlider" type="HSlider" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer/BGMContainer" unique_id=1336467032]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SFXContainer" type="VBoxContainer" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1884308928]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SFXLabel" type="Label" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer/SFXContainer" unique_id=96044175]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer/SFXContainer" unique_id=46039626]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="TTSContainer" type="VBoxContainer" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1884308929]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TTSLabel" type="Label" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer/TTSContainer" unique_id=96044176]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "TTS Volume"
+
+[node name="TTSSlider" type="HSlider" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer/TTSContainer" unique_id=46039627]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=2145590271]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Close"
+
+[node name="ResetProgressButton" type="Button" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1987654322]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Reset Progress"
+
+[node name="MainMenuButton" type="Button" parent="CanvasLayer/SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1987654321]
+custom_minimum_size = Vector2(150, 35)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Main Menu"
+
+[node name="AutoSkipButton" type="Button" parent="." unique_id=765359332]
+layout_mode = 0
+offset_left = 1140.0
+offset_top = 10.0
+offset_right = 1270.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 14
+text = "Auto Skip: OFF"
+
+[node name="TTSButton" type="Button" parent="." unique_id=1449933659]
+layout_mode = 0
+offset_left = 1140.0
+offset_top = 45.0
+offset_right = 1270.0
+offset_bottom = 75.0
+theme_override_font_sizes/font_size = 14
+text = "TTS: ON"
+
+[node name="SaveLoadButton" type="Button" parent="." unique_id=600398356]
+layout_mode = 0
+offset_left = 1140.0
+offset_top = 80.0
+offset_right = 1270.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 14
+text = "Save/Load"
+
+[node name="SettingsButton" type="Button" parent="." unique_id=1271754355]
+layout_mode = 0
+offset_left = 1140.0
+offset_top = 115.0
+offset_right = 1270.0
+offset_bottom = 145.0
+theme_override_font_sizes/font_size = 14
+text = "Settings"
+
+[node name="SaveLoadMenu" parent="." unique_id=1133797081 instance=ExtResource("3_slm")]
+visible = false
+layout_mode = 1
+
+[node name="GameOverOverlay" type="Control" parent="." unique_id=2133121028]
+visible = false
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="BgOverlay" type="ColorRect" parent="GameOverOverlay" unique_id=619154460]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverOverlay" unique_id=1084474131]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="GameOverOverlay/VBoxContainer" unique_id=240783486]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 48
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="GameOverOverlay/VBoxContainer" unique_id=1625895597]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.6, 0.75, 1)
+theme_override_font_sizes/font_size = 18
+text = "You've lost everyone's trust..."
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOverOverlay/VBoxContainer" unique_id=427639345]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Try Again"
+
+[node name="MainMenuButton" type="Button" parent="GameOverOverlay/VBoxContainer" unique_id=1057895998]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Main Menu"

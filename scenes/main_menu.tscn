@@ -1,0 +1,256 @@
+[gd_scene format=3 uid="uid://menu1"]
+
+[ext_resource type="Script" uid="uid://xflj3hxqcx3s" path="res://scripts/main_menu.gd" id="1_mm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_settings_bg"]
+bg_color = Color(0.05, 0.03, 0.1, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.4, 0.7, 0.6)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_btn"]
+bg_color = Color(0.15, 0.1, 0.25, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.4, 0.7, 0.5)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menu_btn_hover"]
+bg_color = Color(0.25, 0.18, 0.4, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.6, 0.9, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="MainMenu" type="Control" unique_id=662763628]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_mm")
+
+[node name="Background" type="ColorRect" parent="." unique_id=201964750]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.06, 0.03, 0.1, 1)
+
+[node name="SettingsOverlay" type="Control" parent="." unique_id=1538231064]
+visible = false
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="BgOverlay" type="ColorRect" parent="SettingsOverlay" unique_id=896480487]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0.7)
+
+[node name="SettingsPanel" type="Panel" parent="SettingsOverlay" unique_id=2080070570]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = 320.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_settings_bg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsOverlay/SettingsPanel" unique_id=650898437]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 480.0
+offset_bottom = 340.0
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1607941880]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.7, 0.95, 1)
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="BGMContainer" type="VBoxContainer" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=714916246]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BGMLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBoxContainer/BGMContainer" unique_id=1798776801]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Music Volume"
+
+[node name="BGMSlider" type="HSlider" parent="SettingsOverlay/SettingsPanel/VBoxContainer/BGMContainer" unique_id=1329615547]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SFXContainer" type="VBoxContainer" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=395023614]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SFXLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBoxContainer/SFXContainer" unique_id=735046083]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="SettingsOverlay/SettingsPanel/VBoxContainer/SFXContainer" unique_id=1414751254]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="TTSContainer" type="VBoxContainer" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=395023615]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TTSLabel" type="Label" parent="SettingsOverlay/SettingsPanel/VBoxContainer/TTSContainer" unique_id=735046084]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "TTS Volume"
+
+[node name="TTSSlider" type="HSlider" parent="SettingsOverlay/SettingsPanel/VBoxContainer/TTSContainer" unique_id=1414751255]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="Spacer" type="Control" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1488622463]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1590028328]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Close"
+
+[node name="ResetProgressButton" type="Button" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1789012346]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Reset Progress"
+
+[node name="MainMenuButton" type="Button" parent="SettingsOverlay/SettingsPanel/VBoxContainer" unique_id=1789012345]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Main Menu"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1963791196]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="LeftCharacterImage" type="TextureRect" parent="HBoxContainer" unique_id=1145998812]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer" unique_id=286780282]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/CenterContainer" unique_id=1039641293]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=908572166]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.7, 0.95, 1)
+theme_override_font_sizes/font_size = 56
+text = "Sigma Date"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=1922191677]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.5, 0.75, 1)
+theme_override_font_sizes/font_size = 20
+text = "A Dating Simulator"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=140782814]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=1495500282]
+custom_minimum_size = Vector2(240, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Start Game"
+
+[node name="SettingsButton" type="Button" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=525966873]
+custom_minimum_size = Vector2(240, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Settings"
+
+[node name="GalleryButton" type="Button" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=1113160512]
+custom_minimum_size = Vector2(240, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Gallery"
+
+[node name="QuitButton" type="Button" parent="HBoxContainer/CenterContainer/VBoxContainer" unique_id=1401414529]
+custom_minimum_size = Vector2(240, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_menu_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_menu_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_menu_btn_hover")
+text = "Quit"
+
+[node name="RightCharacterImage" type="TextureRect" parent="HBoxContainer" unique_id=1412427778]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+stretch_mode = 5

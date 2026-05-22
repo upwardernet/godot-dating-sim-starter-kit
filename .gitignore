@@ -1,0 +1,16 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Dev utilities
+auto-test.log
+check_missing.js
+check_qwen_status.js
+copy_missing_tts.js
+copy_tts.js
+gen_missing_tts.js
+gen_one_char.js
+generate_qwen_all.js
+generate_qwen_batch_clone.js
+generate_qwen_tts.js
+monitor_tts.js

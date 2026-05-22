@@ -1,0 +1,107 @@
+{
+  "last_node_id": 50,
+  "last_link_id": 50,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Qwen3TTSLoader",
+      "pos": [-1600, -200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "model_obj", "type": "QWEN3_MODEL", "links": [1, 2, 3]}],
+      "properties": {"Node name for S&R": "Qwen3TTSLoader"},
+      "widgets_values": ["Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice", "ModelScope", "bf16", "sdpa", true]
+    },
+    {
+      "id": 10,
+      "type": "LoadAudio",
+      "pos": [-1600, -500],
+      "size": [300, 100],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "audio", "type": "AUDIO", "links": [10]}],
+      "properties": {"Node name for S&R": "LoadAudio"},
+      "widgets_values": ["tts_maya_voice_design_00001_.mp3", "audio/tts"]
+    },
+    {
+      "id": 11,
+      "type": "LoadAudio",
+      "pos": [-1600, -350],
+      "size": [300, 100],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "audio", "type": "AUDIO", "links": [11]}],
+      "properties": {"Node name for S&R": "LoadAudio"},
+      "widgets_values": ["tts_elena_voice_design_00001_.mp3", "audio/tts"]
+    },
+    {
+      "id": 12,
+      "type": "LoadAudio",
+      "pos": [-1600, -200],
+      "size": [300, 100],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [{"name": "audio", "type": "AUDIO", "links": [12]}],
+      "properties": {"Node name for S&R": "LoadAudio"},
+      "widgets_values": ["tts_vanessa_voice_design_00001_.mp3", "audio/tts"]
+    },
+    {
+      "id": 20,
+      "type": "Qwen3TTSVoiceClone",
+      "pos": [-1100, -800],
+      "size": [500, 400],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"name": "model_obj", "type": "QWEN3_MODEL", "link": 1},
+        {"name": "ref_audio", "type": "AUDIO", "link": 10}
+      ],
+      "outputs": [{"name": "AUDIO", "type": "AUDIO", "links": [20]}],
+      "properties": {"Node name for S&R": "Qwen3TTSVoiceClone"},
+      "widgets_values": [
+        "Oh my god, he's actually here! The exchange student from overseas!",
+        "English",
+        "Concatenate (Merge)",
+        42,
+        "A bratty, energetic young adult female voice. Pitch is medium-high with playful sassiness. Bold, teasing, slightly flirtatious.",
+        2048,
+        0.9,
+        1,
+        50,
+        1.05
+      ]
+    },
+    {
+      "id": 21,
+      "type": "SaveAudioMP3",
+      "pos": [-500, -800],
+      "size": [300, 150],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [{"name": "audio", "type": "AUDIO", "link": 20}],
+      "outputs": [],
+      "properties": {"Node name for S&R": "SaveAudioMP3"},
+      "widgets_values": ["audio/tts/tts_maya_0", "V0"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 20, 0, "QWEN3_MODEL"],
+    [10, 10, 0, 20, 1, "AUDIO"],
+    [20, 20, 0, 21, 0, "AUDIO"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {"ds": {"scale": 1, "offset": [1600, 800]}},
+  "version": 0.4
+}
